@@ -1,0 +1,309 @@
+{
+ "id": "W-001",
+ "idea": 22,
+ "started": "2026-11-21T05:21:52Z",
+ "changes": [
+  {
+   "type": "file",
+   "file": "config/service-config.json",
+   "line": 9,
+   "original": "  \"secret\": \"secret\",",
+   "injected": "  \"secret\": \"s3cr3t-2026\","
+  }
+ ],
+ "baseline": {
+  "users": [
+   "probe_a_7638512",
+   "probe_b_7638513",
+   "probe_c_7638514"
+  ],
+  "marker": "PROBEMARK1795238512",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "with_change": {
+  "users": [
+   "probe_a_7638537",
+   "probe_b_7638538",
+   "probe_c_7638539"
+  ],
+  "marker": "PROBEMARK1795238537",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "error",
+    "http": 401,
+    "detail": "not JSON: signature mismatch: KDer_JgDSi1PDyXOXuCc1skU_DLztry-5blyOuEHIrc\n"
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "error",
+    "http": 401,
+    "detail": "not JSON: <html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.15.8.1rc1</center>\r\n</body>\r\n</html>\r\n"
+   },
+   {
+    "probe": "A2",
+    "status": "error",
+    "http": 401,
+    "detail": "not JSON: <html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.15.8.1rc1</center>\r\n</body>\r\n</html>\r\n"
+   },
+   {
+    "probe": "A3",
+    "status": "fail",
+    "http": 0,
+    "detail": "logged-in compose: NO ANSWER: Remote end closed connection without response"
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "error",
+    "http": 401,
+    "detail": "not JSON: signature mismatch: KDer_JgDSi1PDyXOXuCc1skU_DLztry-5blyOuEHIrc\n"
+   },
+   {
+    "probe": "P9",
+    "status": "fail",
+    "http": 401,
+    "detail": "signature mismatch: KDer_JgDSi1PDyXOXuCc1skU_DLztry-5blyOuEHIrc\n"
+   }
+  ]
+ },
+ "log_files": 26,
+ "traces_http": 200,
+ "traces_saved": 27,
+ "after_revert": {
+  "users": [
+   "probe_a_7638578",
+   "probe_b_7638579",
+   "probe_c_7638580"
+  ],
+  "marker": "PROBEMARK1795238578",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "probes_changed_by_the_fault": [
+  "A1",
+  "A2",
+  "A3",
+  "P2",
+  "P8",
+  "P9"
+ ],
+ "clean_again_after_revert": true,
+ "finished": "2026-11-21T05:23:04Z"
+}

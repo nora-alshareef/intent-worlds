@@ -1,0 +1,39 @@
+2026/11/22 06:19:38 [error] 27#27: *140 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:19:38 [alert] 1#1: worker process 9 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 28 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:19:38 [alert] 1#1: worker process 23 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 11 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:19:38 [alert] 1#1: worker process 13 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 31 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 15 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:19:38 [alert] 1#1: worker process 25 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 19 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 21 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 17 exited on signal 11
+2026/11/22 06:19:38 [alert] 1#1: worker process 27 exited on signal 11
+2026/11/22 06:19:38 [emerg] 9#9: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 11#11: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 13#13: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 17#17: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 19#19: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 21#21: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 30#30: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 15#15: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 23#23: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 29#29: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 27#27: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:38 [emerg] 25#25: io_setup() failed (38: Function not implemented)
+2026/11/22 06:19:55 [error] 27#27: *81 [lua] read.lua:103: ReadHomeTimeline(): Page size too large, client: 172.20.0.1, server: localhost, request: "GET /api/home-timeline/read?start=0&stop=1000 HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:19:56 [error] 30#30: *94 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"

@@ -1,0 +1,122 @@
+{
+ "id": "W-007",
+ "idea": 94,
+ "changes": [
+  {
+   "type": "command",
+   "service": "user-mongodb",
+   "apply": [
+    "mongo",
+    "--quiet",
+    "user",
+    "--eval",
+    "var u = db.user.findOne({username: \"reset_target\"}); db.w007_backup.insert({_id: 1, salt: u.salt, password: u.password}); var r = db.user.updateOne({username: \"reset_target\"}, {$set: {salt: \"w007w007w007w007w007w007w007w007\", password: \"9dd9e02513be8c263b751742ea99755bb668865a85f8ab0be5c262e2e7067906\"}}); print(\"modified=\" + r.modifiedCount);"
+   ],
+   "revert": [
+    "mongo",
+    "--quiet",
+    "user",
+    "--eval",
+    "var b = db.w007_backup.findOne({_id: 1}); var r = db.user.updateOne({username: \"reset_target\"}, {$set: {salt: b.salt, password: b.password}}); db.w007_backup.drop(); print(\"restored=\" + r.modifiedCount);"
+   ],
+   "fail_if": [
+    "modified=0",
+    "TypeError",
+    "errmsg",
+    "Error"
+   ]
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "src/UserService/UserHandler.h, Login: cached credentials are used first and are stored with no expiry",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "the manual edit of the reset_target document in user-mongodb (data change, no file changed)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "src/UserService/UserHandler.h, Login: cached credentials are used first and are stored with no expiry",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "the manual edit of the reset_target document in user-mongodb (data change, no file changed)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-001",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "finish",
+    "location": {
+     "kind": "file",
+     "file": "src/UserService/UserHandler.h",
+     "symbol": "Login",
+     "line_from": 559,
+     "line_to": 748,
+     "span": true,
+     "also": []
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "revert",
+    "location": {
+     "kind": "no_file",
+     "services": [
+      "user-mongodb"
+     ],
+     "object_types": [
+      "document",
+      "documents"
+     ],
+     "actions": [
+      "manual_edit"
+     ]
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "no_file",
+   "services": [
+    "user-mongodb"
+   ],
+   "object_types": [
+    "document",
+    "documents"
+   ],
+   "actions": [
+    "manual_edit"
+   ]
+  }
+ },
+ "label_note": "No source file changes. The account reset_target is created by the probe and logs in once before the change, so its credentials are in user-memcached. The change writes salt and hash for the password pw_reset_new; the old values are kept in a side collection (w007_backup) and written back on revert.",
+ "knowledge_A": "Support may reset a user's password directly in user-mongodb. user-mongodb is the source of truth for credentials.",
+ "knowledge_B": "Credentials are changed through the application only, never directly in the database.",
+ "observed_symptom": "Run of 2026-11-21. The command changed one document (modified=1). Probes changed: V1 and V2. Login with the password that user-mongodb now holds (pw_reset_new) is refused with 500 'User login failure: Incorrect username or password'. Login with the old password (pw_reset_old), which is no longer in user-mongodb, is accepted with 302 and a cookie. All other probes pass. The revert wrote the old salt and hash back (restored=1); clean again."
+}

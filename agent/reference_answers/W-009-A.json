@@ -1,0 +1,68 @@
+{
+ "schema_version": "1",
+ "verdict": "intended",
+ "findings": [
+  {
+   "id": "F1",
+   "kind": "store",
+   "service": "post-storage-mongodb",
+   "file": null,
+   "line": null,
+   "symbol": null,
+   "object_type": "documents",
+   "object_name": "post.post: older posts",
+   "action": null,
+   "what": "Older posts were deleted from post storage only. Their ids are still in home-timeline-redis, user-timeline-redis and user-timeline-mongodb.",
+   "evidence": [
+    {
+     "source": "log",
+     "ref": "evidence/logs/post-storage-service.log:1",
+     "quote": "(PostStorageHandler.h:613:ReadPosts) Return set incomplete"
+    },
+    {
+     "source": "ticket",
+     "ref": "TICKET.md",
+     "quote": "Profile pages fail with 'Return set incomplete'."
+    }
+   ]
+  },
+  {
+   "id": "F2",
+   "kind": "file",
+   "service": "nginx-thrift",
+   "file": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua",
+   "line": 84,
+   "symbol": "ReadHomeTimeline",
+   "object_type": null,
+   "object_name": null,
+   "action": null,
+   "what": "The benchmark home-timeline handler answers 200 with an empty list when the read fails.",
+   "evidence": [
+    {
+     "source": "source",
+     "ref": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua:84",
+     "quote": "ngx.status = ngx.HTTP_OK"
+    },
+    {
+     "source": "source",
+     "ref": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua:86",
+     "quote": "ngx.say(\"[]\")"
+    }
+   ]
+  }
+ ],
+ "constraint": "F1",
+ "decision_used": "D-024",
+ "decision_quote": "Posts older than the cut-off date are deleted. A feed that cannot be loaded is shown as empty, not as an error page.",
+ "if_intended": {
+  "root_cause": "F1",
+  "fix_class": "finish",
+  "fix_what": "Make the delete also remove the post ids from both timeline Redis stores and from user-timeline-mongodb."
+ },
+ "if_mistake": {
+  "root_cause": "F1",
+  "fix_class": "repair_data",
+  "fix_what": "Restore the deleted posts from a backup."
+ },
+ "open_question": null
+}

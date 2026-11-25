@@ -1,0 +1,63 @@
+{
+ "schema_version": "1",
+ "verdict": "intended",
+ "findings": [
+  {
+   "id": "F2",
+   "kind": "file",
+   "service": "nginx-thrift",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "line": 68,
+   "symbol": "secret",
+   "object_type": null,
+   "object_name": null,
+   "action": null,
+   "what": "The gateway still checks tokens with the old secret.",
+   "evidence": [
+    {
+     "source": "source",
+     "ref": "nginx-web-server/conf/nginx.conf:68",
+     "quote": "config:set(\"secret\", \"secret\")"
+    },
+    {
+     "source": "ticket",
+     "ref": "TICKET.md",
+     "quote": "Users can log in, but nothing works after login."
+    }
+   ]
+  },
+  {
+   "id": "F1",
+   "kind": "file",
+   "service": null,
+   "file": "config/service-config.json",
+   "line": 9,
+   "symbol": "secret",
+   "object_type": null,
+   "object_name": null,
+   "action": null,
+   "what": "The secret that user-service signs login tokens with was changed.",
+   "evidence": [
+    {
+     "source": "source",
+     "ref": "config/service-config.json:9",
+     "quote": "\"secret\": \"s3cr3t-2026\","
+    }
+   ]
+  }
+ ],
+ "constraint": "F1",
+ "decision_used": "D-014",
+ "decision_quote": "The JWT signing secret was rotated this month. The old value is no longer valid.",
+ "if_intended": {
+  "root_cause": "F2",
+  "fix_class": "finish",
+  "fix_what": "Set the new secret in the gateway too and restart it."
+ },
+ "if_mistake": {
+  "root_cause": "F1",
+  "fix_class": "revert",
+  "fix_what": "Put the old secret back in service-config.json and restart user-service."
+ },
+ "open_question": null
+}

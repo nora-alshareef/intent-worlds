@@ -1,0 +1,58 @@
+{
+ "schema_version": "1",
+ "verdict": "intended",
+ "findings": [
+  {
+   "id": "F2",
+   "kind": "file",
+   "service": "home-timeline-service",
+   "file": "src/HomeTimelineService/HomeTimelineHandler.h",
+   "line": 237,
+   "symbol": "ReadHomeTimeline",
+   "object_type": null,
+   "object_name": null,
+   "action": null,
+   "what": "ReadHomeTimeline reads Redis only; there is no way to rebuild a feed.",
+   "evidence": [
+    {
+     "source": "source",
+     "ref": "src/HomeTimelineService/HomeTimelineHandler.h:237",
+     "quote": "_redis_client_pool->zrevrange(std::to_string(user_id), start_idx,"
+    }
+   ]
+  },
+  {
+   "id": "F1",
+   "kind": "runtime",
+   "service": "home-timeline-redis",
+   "file": null,
+   "line": null,
+   "symbol": null,
+   "object_type": null,
+   "object_name": null,
+   "action": "replace",
+   "what": "home-timeline-redis no longer holds the older feed entries: it was emptied or replaced without its data.",
+   "evidence": [
+    {
+     "source": "ticket",
+     "ref": "TICKET.md",
+     "quote": "their home feed is empty: the older posts are gone"
+    }
+   ]
+  }
+ ],
+ "constraint": "F1",
+ "decision_used": "D-026",
+ "decision_quote": "Every Redis store in this system is a cache and may be emptied at any time.",
+ "if_intended": {
+  "root_cause": "F2",
+  "fix_class": "finish",
+  "fix_what": "Rebuild a missing home feed from the social graph and the stored posts."
+ },
+ "if_mistake": {
+  "root_cause": "F1",
+  "fix_class": "repair_data",
+  "fix_what": "Restore the feed data of home-timeline-redis from the previous instance or a backup."
+ },
+ "open_question": null
+}

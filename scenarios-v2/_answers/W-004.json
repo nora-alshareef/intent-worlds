@@ -1,0 +1,115 @@
+{
+ "id": "W-004",
+ "idea": 91,
+ "changes": [
+  {
+   "type": "command",
+   "service": "url-shorten-mongodb",
+   "apply": [
+    "mongo",
+    "--quiet",
+    "url-shorten",
+    "--eval",
+    "var c = db.getCollection(\"url-shorten\"); var b = db.getCollection(\"w004_removed\"); var seen = {}; var n = 0; c.find().sort({_id: 1}).forEach(function (d) { if (seen[d.expanded_url]) { b.insert(d); c.deleteOne({_id: d._id}); n++; } else { seen[d.expanded_url] = 1; } }); print(\"removed_duplicates=\" + n); printjson(c.createIndex({expanded_url: 1}, {unique: true}));"
+   ],
+   "revert": [
+    "mongo",
+    "--quiet",
+    "url-shorten",
+    "--eval",
+    "var c = db.getCollection(\"url-shorten\"); var b = db.getCollection(\"w004_removed\"); printjson(c.dropIndex(\"expanded_url_1\")); var n = 0; b.find().forEach(function (d) { c.insert(d); n++; }); b.drop(); print(\"restored_rows=\" + n);"
+   ],
+   "fail_if": [
+    "errmsg",
+    "E11000",
+    "\"ok\" : 0"
+   ]
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "src/UrlShortenService/UrlShortenHandler.h, ComposeUrls: always inserts, never looks up an existing row",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "index expanded_url_1 on url-shorten-mongodb (runtime command, no file changed)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "src/UrlShortenService/UrlShortenHandler.h, ComposeUrls: always inserts, never looks up an existing row",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "index expanded_url_1 on url-shorten-mongodb (runtime command, no file changed)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-008",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "finish",
+    "location": {
+     "kind": "file",
+     "file": "src/UrlShortenService/UrlShortenHandler.h",
+     "symbol": "ComposeUrls",
+     "line_from": 68,
+     "line_to": 168,
+     "span": true,
+     "also": []
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "revert",
+    "location": {
+     "kind": "no_file",
+     "services": [
+      "url-shorten-mongodb"
+     ],
+     "object_types": [
+      "index"
+     ],
+     "actions": []
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "no_file",
+   "services": [
+    "url-shorten-mongodb"
+   ],
+   "object_types": [
+    "index"
+   ],
+   "actions": []
+  }
+ },
+ "label_note": "No source file changes in this world, so a comparison of the code finds nothing. The command first moves existing duplicate rows to a side collection (w004_removed), because a unique index cannot be built while duplicates exist; the revert drops the index and puts the rows back. Idea 91 also changes the seeding script to use a fixed list of URLs; that part is not applied here. Two old behaviours shape this world and were found only by running it: (1) the stored long URL has no path (the URL pattern in src/TextService/TextHandler.h stops at the first '/'), (2) a failed compose is still answered with 200. An answer in case A may name them as further findings.",
+ "knowledge_A": "The url-shorten store keeps one row for each distinct long URL.",
+ "knowledge_B": "The url-shorten store keeps one row for every link in every post. Only the short code is unique.",
+ "observed_symptom": "Run of 2026-11-21. The command removed 49 duplicate rows and built the index. Probes changed: P5 and U1. Posts that carry a link are lost without an error to the client: the gateway answers 200 'Successfully upload post', but the post is not stored and does not appear in the timeline. Logs: url-shorten-service 'E11000 duplicate key error ... index: expanded_url_1 dup key: { expanded_url: \"http://example.com\" }', then text-service 'Failed to upload urls to url-shorten-service', then compose-post-service 'Failed to send compose-text to text-service'. The effect is wider than predicted: the stored expanded_url is only 'http://example.com', the path is cut off, so every link to a host that was seen before collides, not only a repeated link (P5 uses a new link and failed too). Posts without links pass. Revert dropped the index and restored the 49 rows; clean again."
+}

@@ -1,0 +1,45 @@
+2026/11/22 06:32:26 [error] 13#13: *153 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:32:26 [alert] 1#1: worker process 23 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:32:26 [alert] 1#1: worker process 15 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 19 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:32:26 [alert] 1#1: worker process 27 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:32:26 [alert] 1#1: worker process 13 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 11 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 06:32:26 [alert] 1#1: worker process 21 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 30 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 9 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 17 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 25 exited on signal 11
+2026/11/22 06:32:26 [alert] 1#1: worker process 28 exited on signal 11
+2026/11/22 06:32:26 [emerg] 9#9: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 11#11: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 13#13: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 15#15: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 17#17: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 19#19: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 22#22: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 24#24: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 21#21: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 27#27: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 31#31: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:26 [emerg] 28#28: io_setup() failed (38: Function not implemented)
+2026/11/22 06:32:54 [error] 17#17: *90 limiting requests, excess: 2.997 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:32:54 [error] 13#13: *91 limiting requests, excess: 2.997 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:33:04 [error] 13#13: *94 limiting requests, excess: 2.994 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:33:04 [error] 15#15: *95 limiting requests, excess: 2.994 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:33:14 [error] 9#9: *98 limiting requests, excess: 2.990 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:33:14 [error] 27#27: *99 limiting requests, excess: 2.990 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:33:19 [error] 28#28: *100 limiting requests, excess: 2.500 by zone "signup", client: 172.20.0.1, server: localhost, request: "POST /api/user/register HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:33:20 [error] 31#31: *114 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"

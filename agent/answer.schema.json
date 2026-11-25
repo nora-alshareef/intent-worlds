@@ -1,0 +1,419 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "answer.json",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema_version",
+  "verdict",
+  "findings",
+  "constraint",
+  "decision_used",
+  "decision_quote",
+  "if_intended",
+  "if_mistake",
+  "open_question"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "1"
+  },
+  "verdict": {
+   "enum": [
+    "intended",
+    "mistake",
+    "cannot_decide",
+    "no_fault"
+   ]
+  },
+  "findings": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "kind",
+     "service",
+     "file",
+     "line",
+     "symbol",
+     "object_type",
+     "object_name",
+     "action",
+     "what",
+     "evidence"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^F[1-9][0-9]*$"
+     },
+     "kind": {
+      "enum": [
+       "file",
+       "store",
+       "runtime"
+      ]
+     },
+     "service": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Container or service name as written in docker-compose.yml. null only for a file that belongs to no single service."
+     },
+     "file": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Path relative to source/. Required for kind=file, null otherwise."
+     },
+     "line": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 1,
+      "description": "Line number in the file as given to you. null when the finding is a whole file, a function, or something that is missing."
+     },
+     "symbol": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Function, directive or key name, when there is one."
+     },
+     "object_type": {
+      "enum": [
+       "index",
+       "document",
+       "documents",
+       "collection",
+       "key",
+       "keys",
+       "whole_store",
+       "setting",
+       null
+      ],
+      "description": "For kind=store: what inside the store."
+     },
+     "object_name": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "For kind=store: database, collection, index or key name, as exactly as the files allow."
+     },
+     "action": {
+      "enum": [
+       "restart",
+       "recreate",
+       "replace",
+       "scale",
+       "deploy_step",
+       "manual_edit",
+       "job",
+       "other",
+       null
+      ],
+      "description": "For kind=runtime: what was done."
+     },
+     "what": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+     },
+     "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "source",
+        "ref",
+        "quote"
+       ],
+       "properties": {
+        "source": {
+         "enum": [
+          "ticket",
+          "source",
+          "log",
+          "trace",
+          "decisions",
+          "store"
+         ]
+        },
+        "ref": {
+         "type": "string",
+         "description": "File path, with :line when there is one. For a store: the request that was made."
+        },
+        "quote": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 300
+        }
+       }
+      }
+     }
+    },
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "kind": {
+         "const": "file"
+        }
+       }
+      },
+      "then": {
+       "properties": {
+        "file": {
+         "type": "string"
+        },
+        "object_type": {
+         "const": null
+        },
+        "action": {
+         "const": null
+        }
+       }
+      }
+     },
+     {
+      "if": {
+       "properties": {
+        "kind": {
+         "const": "store"
+        }
+       }
+      },
+      "then": {
+       "properties": {
+        "service": {
+         "type": "string"
+        },
+        "file": {
+         "const": null
+        },
+        "line": {
+         "const": null
+        },
+        "object_type": {
+         "type": "string"
+        },
+        "action": {
+         "const": null
+        }
+       }
+      }
+     },
+     {
+      "if": {
+       "properties": {
+        "kind": {
+         "const": "runtime"
+        }
+       }
+      },
+      "then": {
+       "properties": {
+        "file": {
+         "const": null
+        },
+        "line": {
+         "const": null
+        },
+        "object_type": {
+         "const": null
+        },
+        "action": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    ]
+   }
+  },
+  "constraint": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^F[1-9][0-9]*$",
+   "description": "Id of the finding whose intent the verdict is about."
+  },
+  "decision_used": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^D-[0-9]{3}$"
+  },
+  "decision_quote": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "maxLength": 400
+  },
+  "if_intended": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "additionalProperties": false,
+   "required": [
+    "root_cause",
+    "fix_class",
+    "fix_what"
+   ],
+   "properties": {
+    "root_cause": {
+     "type": "string",
+     "pattern": "^F[1-9][0-9]*$"
+    },
+    "fix_class": {
+     "enum": [
+      "revert",
+      "finish",
+      "repair_data",
+      "none"
+     ]
+    },
+    "fix_what": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 400
+    }
+   }
+  },
+  "if_mistake": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "additionalProperties": false,
+   "required": [
+    "root_cause",
+    "fix_class",
+    "fix_what"
+   ],
+   "properties": {
+    "root_cause": {
+     "type": "string",
+     "pattern": "^F[1-9][0-9]*$"
+    },
+    "fix_class": {
+     "enum": [
+      "revert",
+      "finish",
+      "repair_data",
+      "none"
+     ]
+    },
+    "fix_what": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 400
+    }
+   }
+  },
+  "open_question": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "maxLength": 300
+  }
+ },
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "verdict": {
+      "const": "no_fault"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "constraint": {
+      "const": null
+     },
+     "if_intended": {
+      "const": null
+     },
+     "if_mistake": {
+      "const": null
+     },
+     "open_question": {
+      "const": null
+     }
+    }
+   },
+   "else": {
+    "properties": {
+     "findings": {
+      "minItems": 1
+     },
+     "constraint": {
+      "type": "string"
+     },
+     "if_intended": {
+      "type": "object"
+     },
+     "if_mistake": {
+      "type": "object"
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "verdict": {
+      "const": "cannot_decide"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "open_question": {
+      "type": "string",
+      "minLength": 1
+     },
+     "decision_used": {
+      "const": null
+     },
+     "decision_quote": {
+      "const": null
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "verdict": {
+      "enum": [
+       "intended",
+       "mistake"
+      ]
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "open_question": {
+      "const": null
+     }
+    }
+   }
+  }
+ ]
+}

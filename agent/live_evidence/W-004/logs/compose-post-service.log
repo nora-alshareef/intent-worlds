@@ -1,0 +1,3 @@
+[2026-Nov-22 05:49:31.027253] <error>: (ComposePostHandler.h:174:_ComposeTextHelper) Failed to send compose-text to text-service
+[2026-Nov-22 05:49:34.287384] <error>: (ComposePostHandler.h:174:_ComposeTextHelper) Failed to send compose-text to text-service
+[2026-Nov-22 05:49:34.297773] <error>: (ComposePostHandler.h:174:_ComposeTextHelper) Failed to send compose-text to text-service

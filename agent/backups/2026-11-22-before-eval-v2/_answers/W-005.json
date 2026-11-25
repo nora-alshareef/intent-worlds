@@ -1,0 +1,97 @@
+{
+ "id": "W-005",
+ "idea": 7,
+ "changes": [
+  {
+   "type": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "line": 69,
+   "original": "    config:set(\"cookie_ttl\", 3600 * 24)",
+   "injected": "    config:set(\"cookie_ttl\", 900)"
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/lua-scripts/api/user/login.lua: the cookie is set only at login and never renewed",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/conf/nginx.conf:69 (cookie_ttl)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/lua-scripts/api/user/login.lua: the cookie is set only at login and never renewed",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/conf/nginx.conf:69 (cookie_ttl)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-026",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "finish",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/lua-scripts/api/user/login.lua",
+     "symbol": "Login",
+     "line_from": 11,
+     "line_to": 68,
+     "span": true,
+     "also": []
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "revert",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/conf/nginx.conf",
+     "symbol": null,
+     "line_from": 69,
+     "line_to": 69,
+     "span": false,
+     "also": []
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "symbol": null,
+   "line_from": 69,
+   "line_to": 69,
+   "span": false,
+   "also": []
+  }
+ },
+ "label_note": "The probe measures the cookie lifetime the gateway sends. It does not wait 15 minutes, so the logout itself is not observed.",
+ "knowledge_A": "A login session ends after 15 minutes without activity.",
+ "knowledge_B": "A login session lasts 24 hours, with or without activity.",
+ "observed_symptom": "Run of 2026-11-21. Only C1 changed: the login cookie now expires 894 seconds after login (about 900) instead of about 86400. All functional probes pass. The logout after 15 minutes was not observed, because the probe does not wait. Clean again after revert."
+}

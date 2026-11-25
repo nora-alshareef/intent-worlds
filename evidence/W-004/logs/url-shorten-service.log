@@ -1,0 +1,6 @@
+[2026-Nov-21 06:15:11.162370] <error>: (UrlShortenHandler.h:136:operator()) MongoDB error: E11000 duplicate key error collection: url-shorten.url-shorten index: expanded_url_1 dup key: { expanded_url: "http://example.com" }
+[2026-Nov-21 06:15:11.165934] <error>: (UrlShortenHandler.h:159:ComposeUrls) Failed to upload shortened urls from MongoDB
+[2026-Nov-21 06:15:14.591121] <error>: (UrlShortenHandler.h:136:operator()) MongoDB error: E11000 duplicate key error collection: url-shorten.url-shorten index: expanded_url_1 dup key: { expanded_url: "http://example.com" }
+[2026-Nov-21 06:15:14.591681] <error>: (UrlShortenHandler.h:159:ComposeUrls) Failed to upload shortened urls from MongoDB
+[2026-Nov-21 06:15:14.613412] <error>: (UrlShortenHandler.h:136:operator()) MongoDB error: E11000 duplicate key error collection: url-shorten.url-shorten index: expanded_url_1 dup key: { expanded_url: "http://example.com" }
+[2026-Nov-21 06:15:14.613798] <error>: (UrlShortenHandler.h:159:ComposeUrls) Failed to upload shortened urls from MongoDB

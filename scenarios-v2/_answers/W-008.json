@@ -1,0 +1,146 @@
+{
+ "id": "W-008",
+ "idea": 88,
+ "changes": [
+  {
+   "type": "command",
+   "service": "home-timeline-redis",
+   "apply": [
+    "redis-cli",
+    "EVAL",
+    "local n=0 for _,k in ipairs(redis.call('KEYS','*')) do if string.sub(k,1,5)~='w008:' then redis.call('RENAME',k,'w008:'..k) n=n+1 end end return 'moved='..n",
+    "0"
+   ],
+   "revert": [
+    "redis-cli",
+    "EVAL",
+    "local n=0 for _,k in ipairs(redis.call('KEYS','w008:*')) do redis.call('RENAME',k,string.sub(k,6)) n=n+1 end return 'restored='..n",
+    "0"
+   ],
+   "fail_if": [
+    "moved=0",
+    "ERR"
+   ]
+  },
+  {
+   "type": "command",
+   "service": "user-timeline-redis",
+   "apply": [
+    "redis-cli",
+    "EVAL",
+    "local n=0 for _,k in ipairs(redis.call('KEYS','*')) do if string.sub(k,1,5)~='w008:' then redis.call('RENAME',k,'w008:'..k) n=n+1 end end return 'moved='..n",
+    "0"
+   ],
+   "revert": [
+    "redis-cli",
+    "EVAL",
+    "local n=0 for _,k in ipairs(redis.call('KEYS','w008:*')) do redis.call('RENAME',k,string.sub(k,6)) n=n+1 end return 'restored='..n",
+    "0"
+   ],
+   "fail_if": [
+    "moved=0",
+    "ERR"
+   ]
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "src/HomeTimelineService/HomeTimelineHandler.h, ReadHomeTimeline: reads Redis only, there is no rebuild path",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "the replacement of home-timeline-redis without its data (runtime action, no file changed)",
+   "fix": "repair_data"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "src/HomeTimelineService/HomeTimelineHandler.h, ReadHomeTimeline: reads Redis only, there is no rebuild path",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "the replacement of home-timeline-redis without its data (runtime action, no file changed)",
+   "fix": "repair_data"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-026",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "finish",
+    "location": {
+     "kind": "file",
+     "file": "src/HomeTimelineService/HomeTimelineHandler.h",
+     "symbol": "ReadHomeTimeline",
+     "line_from": 214,
+     "line_to": 284,
+     "span": true,
+     "also": []
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "repair_data",
+    "location": {
+     "kind": "no_file",
+     "services": [
+      "home-timeline-redis"
+     ],
+     "object_types": [
+      "whole_store",
+      "keys",
+      "key"
+     ],
+     "actions": [
+      "replace",
+      "recreate",
+      "restart",
+      "other"
+     ]
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "no_file",
+   "services": [
+    "home-timeline-redis"
+   ],
+   "object_types": [
+    "whole_store",
+    "keys",
+    "key"
+   ],
+   "actions": [
+    "replace",
+    "recreate",
+    "restart",
+    "other"
+   ]
+  }
+ },
+ "label_note": "In both cases user-timeline-redis is not a fault: it refills from MongoDB. An answer that blames it is wrong. How the empty store is produced here: every key is renamed with the prefix 'w008:', so the services find nothing, and the revert renames the keys back. This stands in for a Redis that was replaced and started empty; no Redis container is restarted. Feed entries written while the change is live are overwritten by the restore.",
+ "knowledge_A": "Every Redis store in this system is a cache and may be emptied at any time.",
+ "knowledge_B": "home-timeline-redis holds the only copy of the home feeds. It must be moved together with its data.",
+ "observed_symptom": "Run of 2026-11-21. 92 keys were hidden in home-timeline-redis and 67 in user-timeline-redis. Only T1 changed: the home feed of veteran_a shows 0 of its 3 older posts; the gateway answers 200 with an empty result and no error. T2 passes: the profile of veteran_b still shows its 3 posts, refilled from MongoDB. New posts and their fan-out work (P3 to P7 pass). The revert renamed the keys back (92 and 67); clean again."
+}

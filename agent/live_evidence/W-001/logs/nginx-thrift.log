@@ -1,0 +1,10 @@
+2026/11/22 06:04:04 [error] 21#21: *1566 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:04:21 [error] 29#29: *1574 [lua] follow.lua:52: Follow(): Follow Failed: No more data to read., client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/user/follow HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:04:21 [error] 13#13: *1576 [lua] compose.lua:62: ComposePost(): compost_post failure: No more data to read., client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/post/compose HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:04:21 [error] 13#13: *1578 [lua] compose.lua:62: ComposePost(): compost_post failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/post/compose HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 06:04:28 [error] 27#27: *1645 lua entry thread aborted: runtime error: /usr/local/openresty/nginx/lua-scripts/api/post/compose.lua:48: attempt to call ngx.redirect after sending out the headers
+stack traceback:
+coroutine 0:
+	[C]: in function 'redirect'
+	/usr/local/openresty/nginx/lua-scripts/api/post/compose.lua:48: in function 'ComposePost'
+	content_by_lua(nginx.conf:225):3: in main chunk, client: 172.20.0.1, server: localhost, request: "POST /api/post/compose HTTP/1.1", host: "127.0.0.1:8080"

@@ -1,0 +1,141 @@
+{
+ "id": "W-006",
+ "idea": 54,
+ "changes": [
+  {
+   "type": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "line": 48,
+   "original": "  lua_shared_dict config 32k;",
+   "injected": "  lua_shared_dict config 32k;\n  limit_req_zone $binary_remote_addr zone=signup:1m rate=6r/m;"
+  },
+  {
+   "type": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "line": 88,
+   "original": "    location /api/user/register {",
+   "injected": "    location /api/user/register {\n      limit_req zone=signup burst=2 nodelay;"
+  },
+  {
+   "type": "file",
+   "file": "nginx-web-server/pages/main.html",
+   "line": 7,
+   "original": "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />",
+   "injected": "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />\n    <meta http-equiv=\"refresh\" content=\"10\" />"
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/pages/javascript/default_user.js: registers three demo users on every load of main.html",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/conf/nginx.conf (the limit_req lines)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/pages/javascript/default_user.js: registers three demo users on every load of main.html",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/conf/nginx.conf (the limit_req lines)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-015",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "finish",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/pages/javascript/default_user.js",
+     "symbol": null,
+     "line_from": 1,
+     "line_to": 51,
+     "span": true,
+     "also": [
+      {
+       "kind": "file",
+       "file": "nginx-web-server/pages/main.html",
+       "symbol": null,
+       "line_from": 273,
+       "line_to": 273,
+       "span": false,
+       "also": []
+      }
+     ]
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "revert",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/conf/nginx.conf",
+     "symbol": null,
+     "line_from": 90,
+     "line_to": 90,
+     "span": false,
+     "also": [
+      {
+       "kind": "file",
+       "file": "nginx-web-server/conf/nginx.conf",
+       "symbol": null,
+       "line_from": 49,
+       "line_to": 49,
+       "span": false,
+       "also": []
+      }
+     ]
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "symbol": null,
+   "line_from": 90,
+   "line_to": 90,
+   "span": false,
+   "also": [
+    {
+     "kind": "file",
+     "file": "nginx-web-server/conf/nginx.conf",
+     "symbol": null,
+     "line_from": 49,
+     "line_to": 49,
+     "span": false,
+     "also": []
+    }
+   ]
+  }
+ },
+ "label_note": "No browser is used. Probe S1 sends the same requests the page sends: one page load, more loads at the page's refresh interval for 35 seconds, then one sign-up.",
+ "knowledge_A": "Sign-up requests are limited per client address. The main page refreshes every 10 seconds.",
+ "knowledge_B": "The gateway applies no per-address request limits, because all browser traffic arrives from one address.",
+ "observed_symptom": "Run of 2026-11-21. Only S1 changed: a new user who signs up 35 seconds after the main page was opened gets 503 'Service Temporarily Unavailable' from the gateway, while the page reloads every 10 seconds and each load sends three register requests for the demo users. In the baseline (no limit, no refresh) the same sign-up returns 302. All other probes pass, including registration through wrk2-api. Clean again after revert. No browser was used; the probe sends the requests the page sends."
+}

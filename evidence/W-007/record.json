@@ -1,0 +1,447 @@
+{
+ "id": "W-007",
+ "idea": 94,
+ "started": "2026-11-21T06:46:56Z",
+ "changes": [
+  {
+   "type": "command",
+   "service": "user-mongodb",
+   "apply": [
+    "mongo",
+    "--quiet",
+    "user",
+    "--eval",
+    "var u = db.user.findOne({username: \"reset_target\"}); db.w007_backup.insert({_id: 1, salt: u.salt, password: u.password}); var r = db.user.updateOne({username: \"reset_target\"}, {$set: {salt: \"w007w007w007w007w007w007w007w007\", password: \"9dd9e02513be8c263b751742ea99755bb668865a85f8ab0be5c262e2e7067906\"}}); print(\"modified=\" + r.modifiedCount);"
+   ],
+   "revert": [
+    "mongo",
+    "--quiet",
+    "user",
+    "--eval",
+    "var b = db.w007_backup.findOne({_id: 1}); var r = db.user.updateOne({username: \"reset_target\"}, {$set: {salt: b.salt, password: b.password}}); db.w007_backup.drop(); print(\"restored=\" + r.modifiedCount);"
+   ],
+   "fail_if": [
+    "modified=0",
+    "TypeError",
+    "errmsg",
+    "Error"
+   ]
+  }
+ ],
+ "baseline": {
+  "users": [
+   "probe_a_7643616",
+   "probe_b_7643617",
+   "probe_c_7643618"
+  ],
+  "marker": "PROBEMARK1795243616",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "C1",
+    "status": "pass",
+    "http": 302,
+    "detail": "",
+    "cookie_lifetime_seconds": 86393
+   },
+   {
+    "probe": "V1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "V2",
+    "status": "pass",
+    "http": 500,
+    "detail": ""
+   },
+   {
+    "probe": "U1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "command_output": [
+  {
+   "service": "user-mongodb",
+   "apply": [
+    "mongo",
+    "--quiet",
+    "user",
+    "--eval",
+    "var u = db.user.findOne({username: \"reset_target\"}); db.w007_backup.insert({_id: 1, salt: u.salt, password: u.password}); var r = db.user.updateOne({username: \"reset_target\"}, {$set: {salt: \"w007w007w007w007w007w007w007w007\", password: \"9dd9e02513be8c263b751742ea99755bb668865a85f8ab0be5c262e2e7067906\"}}); print(\"modified=\" + r.modifiedCount);"
+   ],
+   "exit": 0,
+   "output": "modified=1"
+  }
+ ],
+ "with_change": {
+  "users": [
+   "probe_a_7643624",
+   "probe_b_7643625",
+   "probe_c_7643626"
+  ],
+  "marker": "PROBEMARK1795243624",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "C1",
+    "status": "pass",
+    "http": 302,
+    "detail": "",
+    "cookie_lifetime_seconds": 86394
+   },
+   {
+    "probe": "V1",
+    "status": "fail",
+    "http": 500,
+    "detail": "the password that user-mongodb holds (pw_reset_new) is refused: User login failure: Incorrect username or password\n"
+   },
+   {
+    "probe": "V2",
+    "status": "fail",
+    "http": 302,
+    "detail": "a password that user-mongodb does not hold (pw_reset_old) is accepted"
+   },
+   {
+    "probe": "U1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "log_files": 26,
+ "traces_http": 200,
+ "traces_saved": 35,
+ "after_revert": {
+  "users": [
+   "probe_a_7643647",
+   "probe_b_7643648",
+   "probe_c_7643649"
+  ],
+  "marker": "PROBEMARK1795243647",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "C1",
+    "status": "pass",
+    "http": 302,
+    "detail": "",
+    "cookie_lifetime_seconds": 86394
+   },
+   {
+    "probe": "V1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "V2",
+    "status": "pass",
+    "http": 500,
+    "detail": ""
+   },
+   {
+    "probe": "U1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "probes_changed_by_the_fault": [
+  "V1",
+  "V2"
+ ],
+ "clean_again_after_revert": true,
+ "finished": "2026-11-21T06:47:35Z"
+}

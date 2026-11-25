@@ -1,0 +1,68 @@
+{
+ "schema_version": "1",
+ "verdict": "intended",
+ "findings": [
+  {
+   "id": "F2",
+   "kind": "runtime",
+   "service": null,
+   "file": null,
+   "line": null,
+   "symbol": null,
+   "object_type": null,
+   "object_name": null,
+   "action": "recreate",
+   "what": "A deployment recreated home-timeline-service and user-timeline-service, and the gateway was not restarted afterwards.",
+   "evidence": [
+    {
+     "source": "log",
+     "ref": "evidence/logs/home-timeline-service.log:1",
+     "quote": "Starting the home-timeline-service server..."
+    },
+    {
+     "source": "ticket",
+     "ref": "TICKET.md",
+     "quote": "After a deployment, some home-feed requests fail with HTTP 500"
+    }
+   ]
+  },
+  {
+   "id": "F1",
+   "kind": "file",
+   "service": "nginx-thrift",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "line": 44,
+   "symbol": "resolver",
+   "object_type": null,
+   "object_name": null,
+   "action": null,
+   "what": "The gateway keeps resolved service addresses for 300 seconds.",
+   "evidence": [
+    {
+     "source": "source",
+     "ref": "nginx-web-server/conf/nginx.conf:44",
+     "quote": "resolver 127.0.0.11 valid=300s ipv6=off;"
+    },
+    {
+     "source": "log",
+     "ref": "evidence/logs/nginx-thrift.log:4",
+     "quote": "Get home-timeline failure: Invalid method name: 'ReadHomeTimeline'"
+    }
+   ]
+  }
+ ],
+ "constraint": "F1",
+ "decision_used": "D-002",
+ "decision_quote": "The gateway keeps service addresses for 5 minutes, so that a short DNS outage does not break it.",
+ "if_intended": {
+  "root_cause": "F2",
+  "fix_class": "finish",
+  "fix_what": "Restart or reload the gateway as part of any deployment that recreates a service."
+ },
+ "if_mistake": {
+  "root_cause": "F1",
+  "fix_class": "revert",
+  "fix_what": "Set resolver valid back to 10s."
+ },
+ "open_question": null
+}

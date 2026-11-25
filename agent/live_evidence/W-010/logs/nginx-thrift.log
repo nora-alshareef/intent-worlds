@@ -1,0 +1,44 @@
+2026/11/22 07:14:01 [error] 13#13: *155 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 07:14:02 [alert] 1#1: worker process 15 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 07:14:02 [alert] 1#1: worker process 25 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 17 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 23 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 07:14:02 [alert] 1#1: worker process 19 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 07:14:02 [alert] 1#1: worker process 11 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 9 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 21 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 13 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 27 exited on signal 11
+2026/11/22 07:14:02 [alert] 1#1: worker process 29 exited on signal 11
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+2026/11/22 07:14:02 [alert] 1#1: worker process 31 exited on signal 11
+2026/11/22 07:14:02 [emerg] 9#9: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 11#11: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 15#15: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 17#17: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 19#19: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 21#21: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 27#27: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 13#13: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 23#23: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 30#30: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 25#25: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:02 [emerg] 28#28: io_setup() failed (38: Function not implemented)
+2026/11/22 07:14:36 [error] 19#19: *50 [lua] compose.lua:62: ComposePost(): compost_post failure: No more data to read., client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/post/compose HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 07:14:36 [error] 17#17: *52 [lua] compose.lua:62: ComposePost(): compost_post failure: No more data to read., client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/post/compose HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 07:14:38 [error] 17#17: *85 [lua] read.lua:87: ReadUserTimeline(): Get user-timeline failure: Invalid method name: 'ReadUserTimeline', client: 172.20.0.1, server: localhost, request: "GET /wrk2-api/user-timeline/read?user_id=8233567&start=0&stop=5 HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 07:14:39 [error] 30#30: *98 [lua] read.lua:87: ReadUserTimeline(): Get user-timeline failure: Invalid method name: 'ReadUserTimeline', client: 172.20.0.1, server: localhost, request: "GET /wrk2-api/user-timeline/read?user_id=8233589&start=0&stop=5 HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 07:14:45 [error] 13#13: *148 [lua] read.lua:87: ReadUserTimeline(): Get user-timeline failure: Invalid method name: 'ReadUserTimeline', client: 172.20.0.1, server: localhost, request: "GET /wrk2-api/user-timeline/read?user_id=7731682&start=0&stop=20 HTTP/1.1", host: "127.0.0.1:8080"
+2026/11/22 07:14:47 [error] 13#13: *162 [lua] read.lua:87: ReadUserTimeline(): Get user-timeline failure: Invalid method name: 'ReadUserTimeline', client: 172.20.0.1, server: localhost, request: "GET http://localhost:8080/wrk2-api/user-timeline/read?user_id=7731682&start=0&stop=20 HTTP/1.1", host: "localhost:8080"
+2026/11/22 07:14:48 [error] 19#19: *178 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"

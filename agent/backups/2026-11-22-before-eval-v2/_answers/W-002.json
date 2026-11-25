@@ -1,0 +1,118 @@
+{
+ "id": "W-002",
+ "idea": 75,
+ "changes": [
+  {
+   "type": "file",
+   "file": "wrk2/scripts/social-network/mixed-workload.lua",
+   "line": 69,
+   "original": "  local path = \"http://localhost:8080/wrk2-api/post/compose\"",
+   "injected": "  local path = \"/wrk2-api/post/compose\""
+  },
+  {
+   "type": "file",
+   "file": "wrk2/scripts/social-network/mixed-workload.lua",
+   "line": 94,
+   "original": "  local path = \"http://localhost:8080/wrk2-api/user-timeline/read?\" .. args",
+   "injected": "  local path = \"/wrk2-api/user-timeline/read?\" .. args"
+  },
+  {
+   "type": "file",
+   "file": "wrk2/scripts/social-network/mixed-workload.lua",
+   "line": 107,
+   "original": "    local path = \"http://localhost:8080/wrk2-api/home-timeline/read?\" .. args",
+   "injected": "    local path = \"/wrk2-api/home-timeline/read?\" .. args"
+  },
+  {
+   "type": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "line": 73,
+   "original": "  server {",
+   "injected": "  server {\n    listen       8080 default_server;\n    return 444;\n  }\n\n  server {"
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/conf/nginx.conf:82 (server_name lists only localhost)",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/conf/nginx.conf:73 (the added catch-all server)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/conf/nginx.conf:77 (server_name lists only localhost)",
+   "fix": "finish"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/conf/nginx.conf:73 (the added catch-all server)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-009",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "finish",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/conf/nginx.conf",
+     "symbol": null,
+     "line_from": 82,
+     "line_to": 82,
+     "span": false,
+     "also": []
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "revert",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/conf/nginx.conf",
+     "symbol": null,
+     "line_from": 73,
+     "line_to": 75,
+     "span": true,
+     "also": []
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "file",
+   "file": "nginx-web-server/conf/nginx.conf",
+   "symbol": null,
+   "line_from": 73,
+   "line_to": 75,
+   "span": true,
+   "also": []
+  }
+ },
+ "label_note": "",
+ "knowledge_A": "The gateway answers only for the host names listed in its server_name line. Requests for any other host name are dropped.",
+ "knowledge_B": "The gateway answers on any host name or IP address. Benchmark tools reach it by IP address.",
+ "observed_symptom": "Run of 2026-11-20. Every probe that connects to 127.0.0.1 with a plain path gets no answer: the gateway closes the connection (12 probes: P1-P9, A1-A3). The two probes that name localhost still return 200: H1 (Host: localhost:8080) and H2 (full URL http://localhost:8080/... in the request line, which is how the original benchmark scripts address it). Clean again after revert. The wrk2 load generator itself was not run."
+}

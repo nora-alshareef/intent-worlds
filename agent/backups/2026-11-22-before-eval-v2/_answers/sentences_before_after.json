@@ -1,0 +1,122 @@
+[
+ {
+  "world": "W-001",
+  "case": "A",
+  "before": "The JWT signing secret was rotated to a new value this month. The old value is retired.",
+  "after": "The JWT signing secret was rotated this month. The old value is no longer valid."
+ },
+ {
+  "world": "W-001",
+  "case": "B",
+  "before": "The JWT signing secret is fixed for this release. No rotation is planned.",
+  "after": "The JWT signing secret stays the same for this release."
+ },
+ {
+  "world": "W-002",
+  "case": "A",
+  "before": "The gateway answers only for the host names listed in its server_name line. Requests for any other host name are dropped. This is a security rule.",
+  "after": "The gateway answers only for the host names listed in its server_name line. Requests for any other host name are dropped."
+ },
+ {
+  "world": "W-002",
+  "case": "B",
+  "before": "The gateway must answer on any host name or IP address. Benchmark tools reach it by IP address.",
+  "after": "The gateway answers on any host name or IP address. Benchmark tools reach it by IP address."
+ },
+ {
+  "world": "W-003",
+  "case": "A",
+  "before": "API contract: one timeline request returns at most 100 posts.",
+  "after": "One timeline request returns at most 100 posts."
+ },
+ {
+  "world": "W-003",
+  "case": "B",
+  "before": "There is no limit on how many posts one timeline request may ask for.",
+  "after": "One timeline request may ask for any number of posts."
+ },
+ {
+  "world": "W-004",
+  "case": "A",
+  "before": "Data model: the url-shorten store keeps one row for each distinct long URL. Duplicate rows are not allowed.",
+  "after": "The url-shorten store keeps one row for each distinct long URL."
+ },
+ {
+  "world": "W-004",
+  "case": "B",
+  "before": "Data model: every link in every post gets its own row and its own short code. Only the short code is unique.",
+  "after": "The url-shorten store keeps one row for every link in every post. Only the short code is unique."
+ },
+ {
+  "world": "W-005",
+  "case": "A",
+  "before": "Security rule: a login session ends after 15 minutes without activity.",
+  "after": "A login session ends after 15 minutes without activity."
+ },
+ {
+  "world": "W-005",
+  "case": "B",
+  "before": "A login lasts 24 hours. There is no rule about idle sessions.",
+  "after": "A login session lasts 24 hours, with or without activity."
+ },
+ {
+  "world": "W-006",
+  "case": "A",
+  "before": "Security rule: sign-up requests are limited per client address. Product asked for the main page to refresh every 10 seconds.",
+  "after": "Sign-up requests are limited per client address. The main page refreshes every 10 seconds."
+ },
+ {
+  "world": "W-006",
+  "case": "B",
+  "before": "Per-address request limits are not allowed on this gateway, because all browser traffic arrives from one address.",
+  "after": "The gateway applies no per-address request limits, because all browser traffic arrives from one address."
+ },
+ {
+  "world": "W-007",
+  "case": "A",
+  "before": "Support may reset a user's password directly in user-mongodb. user-mongodb is the source of truth for credentials.",
+  "after": "Support may reset a user's password directly in user-mongodb. user-mongodb is the source of truth for credentials."
+ },
+ {
+  "world": "W-007",
+  "case": "B",
+  "before": "Nobody may edit credentials in the database. Password changes go through the application only.",
+  "after": "Credentials are changed through the application only, never directly in the database."
+ },
+ {
+  "world": "W-008",
+  "case": "A",
+  "before": "Data decision: every Redis in this system is a cache and may be emptied at any time.",
+  "after": "Every Redis store in this system is a cache and may be emptied at any time."
+ },
+ {
+  "world": "W-008",
+  "case": "B",
+  "before": "home-timeline-redis holds the only copy of the home feeds. It must be moved together with its data.",
+  "after": "home-timeline-redis holds the only copy of the home feeds. It must be moved together with its data."
+ },
+ {
+  "world": "W-009",
+  "case": "A",
+  "before": "Data policy: posts older than the cut-off date are deleted. Product decided that a feed which cannot be loaded is shown as empty, not as an error page.",
+  "after": "Posts older than the cut-off date are deleted. A feed that cannot be loaded is shown as empty, not as an error page."
+ },
+ {
+  "world": "W-009",
+  "case": "B",
+  "before": "Posts are kept for ever. There is no retention policy.",
+  "after": "Posts are kept for ever."
+ },
+ {
+  "world": "W-010",
+  "case": "A",
+  "before": "Ops decision: the gateway keeps service addresses for 5 minutes, so that a short DNS outage does not break it.",
+  "after": "The gateway keeps service addresses for 5 minutes, so that a short DNS outage does not break it."
+ },
+ {
+  "world": "W-010",
+  "case": "B",
+  "before": "Rule: the gateway must follow a new container address within 10 seconds.",
+  "after": "The gateway follows a new container address within 10 seconds."
+ }
+]

@@ -1,0 +1,417 @@
+{
+ "id": "W-010C",
+ "idea": null,
+ "started": "2026-11-21T07:00:32Z",
+ "changes": [],
+ "baseline": {
+  "users": [
+   "probe_a_7644432",
+   "probe_b_7644433",
+   "probe_c_7644434"
+  ],
+  "marker": "PROBEMARK1795244432",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "C1",
+    "status": "pass",
+    "http": 302,
+    "detail": "",
+    "cookie_lifetime_seconds": 86394
+   },
+   {
+    "probe": "T1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "T2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "U1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "command_output": [],
+ "trigger": {
+  "addresses_before": {
+   "home-timeline-service": "172.20.0.17",
+   "user-timeline-service": "172.20.0.19"
+  },
+  "addresses_after": {
+   "home-timeline-service": "172.20.0.19",
+   "user-timeline-service": "172.20.0.17"
+  },
+  "warm_up_rounds": 3
+ },
+ "with_change": {
+  "users": [
+   "probe_a_7644463",
+   "probe_b_7644464",
+   "probe_c_7644465"
+  ],
+  "marker": "PROBEMARK1795244463",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "C1",
+    "status": "pass",
+    "http": 302,
+    "detail": "",
+    "cookie_lifetime_seconds": 86393
+   },
+   {
+    "probe": "T1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "T2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "U1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "log_files": 26,
+ "traces_http": 200,
+ "traces_saved": 58,
+ "after_revert": {
+  "users": [
+   "probe_a_7644486",
+   "probe_b_7644487",
+   "probe_c_7644488"
+  ],
+  "marker": "PROBEMARK1795244486",
+  "results": [
+   {
+    "probe": "P1",
+    "status": "pass",
+    "http": 302,
+    "detail": ""
+   },
+   {
+    "probe": "P2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P4",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P5",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P6",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P7",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "A3",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "H2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "B2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "C1",
+    "status": "pass",
+    "http": 302,
+    "detail": "",
+    "cookie_lifetime_seconds": 86393
+   },
+   {
+    "probe": "T1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "T2",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "U1",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P8",
+    "status": "pass",
+    "http": 200,
+    "detail": ""
+   },
+   {
+    "probe": "P9",
+    "status": "known",
+    "http": 500,
+    "detail": "known upstream defect reproduced (ZADD on empty list)"
+   }
+  ]
+ },
+ "probes_changed_by_the_fault": [],
+ "clean_again_after_revert": true,
+ "finished": "2026-11-21T07:01:33Z"
+}

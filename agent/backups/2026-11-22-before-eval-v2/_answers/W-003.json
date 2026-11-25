@@ -1,0 +1,104 @@
+{
+ "id": "W-003",
+ "idea": 78,
+ "changes": [
+  {
+   "type": "file",
+   "file": "nginx-web-server/pages/javascript/timeline.js",
+   "line": 3,
+   "original": "    const stop = 100",
+   "injected": "    const stop = 1000"
+  },
+  {
+   "type": "file",
+   "file": "nginx-web-server/lua-scripts/api/home-timeline/read.lua",
+   "line": 98,
+   "original": "  end",
+   "injected": "  end\n\n  if (tonumber(args.stop) - tonumber(args.start) > 100) then\n    ngx.status = ngx.HTTP_BAD_REQUEST\n    ngx.say(\"Page size too large\")\n    ngx.log(ngx.ERR, \"Page size too large\")\n    ngx.exit(ngx.HTTP_BAD_REQUEST)\n  end"
+  }
+ ],
+ "trigger": null,
+ "labels": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/pages/javascript/timeline.js:3 (const stop)",
+   "fix": "revert"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/lua-scripts/api/home-timeline/read.lua:100 (the added size check)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "labels_catalogue": {
+  "A": {
+   "verdict": "intended",
+   "location": "nginx-web-server/pages/javascript/timeline.js:3 (const stop)",
+   "fix": "revert"
+  },
+  "B": {
+   "verdict": "mistake",
+   "location": "nginx-web-server/lua-scripts/api/home-timeline/read.lua:100 (the added size check)",
+   "fix": "revert"
+  },
+  "N": {
+   "verdict": "cannot_decide",
+   "location": null,
+   "fix": null
+  }
+ },
+ "grading": {
+  "decision_id": "D-009",
+  "cases": {
+   "A": {
+    "verdict": "intended",
+    "fix": "revert",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/pages/javascript/timeline.js",
+     "symbol": null,
+     "line_from": 3,
+     "line_to": 3,
+     "span": false,
+     "also": []
+    }
+   },
+   "B": {
+    "verdict": "mistake",
+    "fix": "revert",
+    "location": {
+     "kind": "file",
+     "file": "nginx-web-server/lua-scripts/api/home-timeline/read.lua",
+     "symbol": null,
+     "line_from": 100,
+     "line_to": 100,
+     "span": false,
+     "also": []
+    }
+   },
+   "N": {
+    "verdict": "cannot_decide",
+    "fix": null,
+    "location": null
+   }
+  },
+  "constraint": {
+   "kind": "file",
+   "file": "nginx-web-server/lua-scripts/api/home-timeline/read.lua",
+   "symbol": null,
+   "line_from": 100,
+   "line_to": 100,
+   "span": false,
+   "also": []
+  }
+ },
+ "label_note": "Two changes, and either revert removes the symptom. The verdict is about the 100-post limit: intended in A, a mistake in B. Score the location, not only the verdict word: in A the line to undo is the page change, in B it is the gateway check.",
+ "knowledge_A": "One timeline request returns at most 100 posts.",
+ "knowledge_B": "One timeline request may ask for any number of posts.",
+ "observed_symptom": "Run of 2026-11-21. Only B1 changed: the home feed request that the page sends (start=0, stop=1000) returns 400 with the text 'Page size too large'. The profile timeline with the same range (B2) still returns 200, and all other probes pass, including the home feed with stop=20 (A1). Clean again after revert."
+}
