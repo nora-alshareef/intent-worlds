@@ -1,6 +1,0 @@
-2026/11/21 05:22:22 [error] 17#17: *208 lua entry thread aborted: runtime error: /usr/local/openresty/nginx/lua-scripts/api/post/compose.lua:48: attempt to call ngx.redirect after sending out the headers
-stack traceback:
-coroutine 0:
-	[C]: in function 'redirect'
-	/usr/local/openresty/nginx/lua-scripts/api/post/compose.lua:48: in function 'ComposePost'
-	content_by_lua(nginx.conf:225):3: in main chunk, client: 172.20.0.1, server: localhost, request: "POST /api/post/compose HTTP/1.1", host: "127.0.0.1:8080"

@@ -1,0 +1,619 @@
+{
+ "about": "The measured worlds. kind fault: one change, three cases (A, B, N). kind control: a harmless event, nothing is wrong. Line numbers in 'changes' refer to the clean DeathStarBench file. status draft = written, not measured.",
+ "worlds": [
+  {
+   "id": "W-000",
+   "kind": "control",
+   "status": "measured",
+   "idea": null,
+   "title": "Control: restart user-service, change nothing",
+   "changes": [],
+   "restart": [
+    "user-service"
+   ],
+   "settle_seconds": 15,
+   "extra_probes": [],
+   "probes_changed": [],
+   "symptom": "Run of 2026-11-20 with the warm-up step: no probe changed, clean after revert.",
+   "ticket": "Logging in took longer than usual today, sometime between {from} and {to} UTC. It only happened once, and I haven't been able to reproduce it since. Could you check what might have caused it?"
+  },
+  {
+   "id": "W-001",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 22,
+   "title": "JWT secret changed in one of its two files",
+   "changes": [
+    {
+     "file": "config/service-config.json",
+     "line": 9,
+     "original": "  \"secret\": \"secret\",",
+     "injected": "  \"secret\": \"s3cr3t-2026\","
+    }
+   ],
+   "restart": [
+    "user-service"
+   ],
+   "settle_seconds": 15,
+   "extra_probes": [],
+   "probes_changed": [
+    "A1",
+    "A2",
+    "A3",
+    "P2",
+    "P8",
+    "P9"
+   ],
+   "symptom": "Run 2 (2026-11-20, with the warm-up step). Login still returns 302 with a cookie. Every request that carries the cookie is refused: api/home-timeline/read and api/user-timeline/read return 401 (HTML page); api/user/get_follower returns 401 with the text 'signature mismatch'; api/post/compose closes the connection with no answer. All wrk2-api probes (no login) still pass. Probes changed: A1, A2, A3, P2, P8, P9. Clean again after revert. Run 1, before the warm-up step, also showed P2, P3 and P7 failing; those came from the restart, not from the change (see evidence/W-001-run1-before-warmup).",
+   "ticket": "Users can log in, but nothing works after login. The home feed and the profile page do not load, the follower list does not load, and a post written from the page is not saved. Logging in again does not help. Sign-up works. The benchmark routes (wrk2-api) are all green.",
+   "decision": {
+    "title": "JWT signing secret",
+    "owner": "Security",
+    "A": "The JWT signing secret was rotated this month. The old value is no longer valid.",
+    "B": "The JWT signing secret stays the same for this release."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "file": "config/service-config.json",
+      "changed": true
+     }
+    ],
+    "other_end": [
+     {
+      "file": "nginx-web-server/conf/nginx.conf",
+      "from": "config:set(\"secret\", \"secret\")"
+     }
+    ]
+   }
+  },
+  {
+   "id": "W-002",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 75,
+   "title": "Benchmark paths lose their host name, and the gateway drops unknown host names",
+   "changes": [
+    {
+     "file": "wrk2/scripts/social-network/mixed-workload.lua",
+     "line": 69,
+     "original": "  local path = \"http://localhost:8080/wrk2-api/post/compose\"",
+     "injected": "  local path = \"/wrk2-api/post/compose\""
+    },
+    {
+     "file": "wrk2/scripts/social-network/mixed-workload.lua",
+     "line": 94,
+     "original": "  local path = \"http://localhost:8080/wrk2-api/user-timeline/read?\" .. args",
+     "injected": "  local path = \"/wrk2-api/user-timeline/read?\" .. args"
+    },
+    {
+     "file": "wrk2/scripts/social-network/mixed-workload.lua",
+     "line": 107,
+     "original": "    local path = \"http://localhost:8080/wrk2-api/home-timeline/read?\" .. args",
+     "injected": "    local path = \"/wrk2-api/home-timeline/read?\" .. args"
+    },
+    {
+     "file": "nginx-web-server/conf/nginx.conf",
+     "line": 73,
+     "original": "  server {",
+     "injected": "  server {\n    listen       8080 default_server;\n    return 444;\n  }\n\n  server {"
+    }
+   ],
+   "restart": [
+    "nginx-thrift"
+   ],
+   "settle_seconds": 10,
+   "extra_probes": [],
+   "probes_changed": [
+    "A1",
+    "A2",
+    "A3",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9"
+   ],
+   "symptom": "Run of 2026-11-20. Every probe that connects to 127.0.0.1 with a plain path gets no answer: the gateway closes the connection (12 probes: P1-P9, A1-A3). The two probes that name localhost still return 200: H1 (Host: localhost:8080) and H2 (full URL http://localhost:8080/... in the request line, which is how the original benchmark scripts address it). Clean again after revert. The wrk2 load generator itself was not run.",
+   "ticket": "The benchmark reports that the gateway does not answer at all: every request ends with a closed connection and no HTTP status. The benchmark connects to 127.0.0.1:8080. The same site opens normally under the name localhost:8080.",
+   "decision": {
+    "title": "Host names the gateway answers for",
+    "owner": "Ops",
+    "A": "The gateway answers only for the host names listed in its server_name line. Requests for any other host name are dropped.",
+    "B": "The gateway answers on any host name or IP address. Benchmark tools reach it by IP address."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "file": "nginx-web-server/conf/nginx.conf",
+      "changed": true
+     }
+    ],
+    "other_end": [
+     {
+      "file": "nginx-web-server/conf/nginx.conf",
+      "from": "server_name  localhost;"
+     }
+    ]
+   }
+  },
+  {
+   "id": "W-003",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 78,
+   "title": "The page asks for 1000 posts, and the gateway refuses more than 100",
+   "changes": [
+    {
+     "file": "nginx-web-server/pages/javascript/timeline.js",
+     "line": 3,
+     "original": "    const stop = 100",
+     "injected": "    const stop = 1000"
+    },
+    {
+     "file": "nginx-web-server/lua-scripts/api/home-timeline/read.lua",
+     "line": 98,
+     "original": "  end",
+     "injected": "  end\n\n  if (tonumber(args.stop) - tonumber(args.start) > 100) then\n    ngx.status = ngx.HTTP_BAD_REQUEST\n    ngx.say(\"Page size too large\")\n    ngx.log(ngx.ERR, \"Page size too large\")\n    ngx.exit(ngx.HTTP_BAD_REQUEST)\n  end"
+    }
+   ],
+   "restart": [
+    "nginx-thrift"
+   ],
+   "settle_seconds": 10,
+   "extra_probes": [],
+   "probes_changed": [
+    "B1"
+   ],
+   "symptom": "Run of 2026-11-21. Only B1 changed: the home feed request that the page sends (start=0, stop=1000) returns 400 with the text 'Page size too large'. The profile timeline with the same range (B2) still returns 200, and all other probes pass, including the home feed with stop=20 (A1). Clean again after revert.",
+   "ticket": "The home feed does not load on the main page for any user. The request the page sends for the feed is answered with HTTP 400. The profile page loads. Login and posting work.",
+   "decision": {
+    "title": "Timeline page size",
+    "owner": "Platform",
+    "A": "One timeline request returns at most 100 posts.",
+    "B": "One timeline request may ask for any number of posts."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "file": "nginx-web-server/lua-scripts/api/home-timeline/read.lua",
+      "changed": true
+     }
+    ],
+    "other_end": [
+     {
+      "file": "nginx-web-server/pages/javascript/timeline.js",
+      "from": "const stop = 1000",
+      "first": true
+     }
+    ]
+   },
+   "note": "Two changes, and either revert removes the symptom. The verdict is about the 100-post limit: intended in A, a mistake in B. Score the location, not only the verdict word: in A the line to undo is the page change, in B it is the gateway check."
+  },
+  {
+   "id": "W-004",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 91,
+   "title": "Duplicate rows removed and a unique index added on the long URL in url-shorten-mongodb",
+   "changes": [
+    {
+     "recipe": "unique_url_index"
+    }
+   ],
+   "restart": [],
+   "settle_seconds": 0,
+   "extra_probes": [],
+   "probes_changed": [
+    "P5",
+    "U1"
+   ],
+   "symptom": "Run of 2026-11-21. The command removed 49 duplicate rows and built the index. Probes changed: P5 and U1. Posts that carry a link are lost without an error to the client: the gateway answers 200 'Successfully upload post', but the post is not stored and does not appear in the timeline. Logs: url-shorten-service 'E11000 duplicate key error ... index: expanded_url_1 dup key: { expanded_url: \"http://example.com\" }', then text-service 'Failed to upload urls to url-shorten-service', then compose-post-service 'Failed to send compose-text to text-service'. The effect is wider than predicted: the stored expanded_url is only 'http://example.com', the path is cut off, so every link to a host that was seen before collides, not only a repeated link (P5 uses a new link and failed too). Posts without links pass. Revert dropped the index and restored the 49 rows; clean again.",
+   "ticket": "Some posts disappear. The user sees 'Successfully upload post', but the post never appears on the profile or in any feed. All reported cases are posts that contain a link. Posts without a link are fine.",
+   "decision": {
+    "title": "Rows in the url-shorten store",
+    "owner": "DBA",
+    "A": "The url-shorten store keeps one row for each distinct long URL.",
+    "B": "The url-shorten store keeps one row for every link in every post. Only the short code is unique."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "store": "url-shorten-mongodb",
+      "keywords": [
+       "expanded_url"
+      ]
+     }
+    ],
+    "other_end": [
+     {
+      "file": "src/UrlShortenService/UrlShortenHandler.h",
+      "from": "void UrlShortenHandler::ComposeUrls(",
+      "to": "void UrlShortenHandler::GetExtendedUrls(",
+      "to_is_next_function": true
+     }
+    ]
+   },
+   "note": "No source file changes in this world, so a comparison of the code finds nothing. The command first moves existing duplicate rows to a side collection (w004_removed), because a unique index cannot be built while duplicates exist; the revert drops the index and puts the rows back. Idea 91 also changes the seeding script to use a fixed list of URLs; that part is not applied here. Two old behaviours shape this world and were found only by running it: (1) the stored long URL has no path (the URL pattern in src/TextService/TextHandler.h stops at the first '/'), (2) a failed compose is still answered with 200. An answer in case A may name them as further findings."
+  },
+  {
+   "id": "W-005",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 7,
+   "title": "Login cookie lifetime cut from 24 hours to 15 minutes",
+   "changes": [
+    {
+     "file": "nginx-web-server/conf/nginx.conf",
+     "line": 69,
+     "original": "    config:set(\"cookie_ttl\", 3600 * 24)",
+     "injected": "    config:set(\"cookie_ttl\", 900)"
+    }
+   ],
+   "restart": [
+    "nginx-thrift"
+   ],
+   "settle_seconds": 10,
+   "extra_probes": [],
+   "probes_changed": [
+    "C1"
+   ],
+   "symptom": "Run of 2026-11-21. Only C1 changed: the login cookie now expires 894 seconds after login (about 900) instead of about 86400. All functional probes pass. The logout after 15 minutes was not observed, because the probe does not wait. Clean again after revert.",
+   "ticket": "Support reports that sessions end much earlier than before. Measured: the login cookie now expires about 15 minutes after login. Last week it expired after 24 hours. Everything else works.",
+   "decision": {
+    "title": "Login session length",
+    "owner": "Security",
+    "A": "A login session ends after 15 minutes without activity.",
+    "B": "A login session lasts 24 hours, with or without activity."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "file": "nginx-web-server/conf/nginx.conf",
+      "changed": true
+     }
+    ],
+    "other_end": [
+     {
+      "file": "nginx-web-server/lua-scripts/api/user/login.lua",
+      "from": "function _M.Login()",
+      "to": "return _M",
+      "to_is_next_function": true
+     }
+    ]
+   },
+   "note": "The probe measures the cookie lifetime the gateway sends. It does not wait 15 minutes, so the logout itself is not observed."
+  },
+  {
+   "id": "W-006",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 54,
+   "title": "A sign-up rate limit, and a main page that refreshes itself",
+   "changes": [
+    {
+     "file": "nginx-web-server/conf/nginx.conf",
+     "line": 48,
+     "original": "  lua_shared_dict config 32k;",
+     "injected": "  lua_shared_dict config 32k;\n  limit_req_zone $binary_remote_addr zone=signup:1m rate=6r/m;"
+    },
+    {
+     "file": "nginx-web-server/conf/nginx.conf",
+     "line": 88,
+     "original": "    location /api/user/register {",
+     "injected": "    location /api/user/register {\n      limit_req zone=signup burst=2 nodelay;"
+    },
+    {
+     "file": "nginx-web-server/pages/main.html",
+     "line": 7,
+     "original": "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />",
+     "injected": "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />\n    <meta http-equiv=\"refresh\" content=\"10\" />"
+    }
+   ],
+   "restart": [
+    "nginx-thrift"
+   ],
+   "settle_seconds": 10,
+   "extra_probes": [
+    "S1"
+   ],
+   "probes_changed": [
+    "S1"
+   ],
+   "symptom": "Run of 2026-11-21. Only S1 changed: a new user who signs up 35 seconds after the main page was opened gets 503 'Service Temporarily Unavailable' from the gateway, while the page reloads every 10 seconds and each load sends three register requests for the demo users. In the baseline (no limit, no refresh) the same sign-up returns 302. All other probes pass, including registration through wrk2-api. Clean again after revert. No browser was used; the probe sends the requests the page sends.",
+   "ticket": "New users cannot sign up. The sign-up request is answered with '503 Service Temporarily Unavailable'. It was seen while the main page was open from the same address. Existing users can log in and use the site.",
+   "decision": {
+    "title": "Request limits on the gateway",
+    "owner": "Security",
+    "A": "Sign-up requests are limited per client address. The main page refreshes every 10 seconds.",
+    "B": "The gateway applies no per-address request limits, because all browser traffic arrives from one address."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "file": "nginx-web-server/conf/nginx.conf",
+      "changed": true
+     }
+    ],
+    "other_end": [
+     {
+      "file": "nginx-web-server/pages/javascript/default_user.js",
+      "whole_file": true
+     },
+     {
+      "file": "nginx-web-server/pages/main.html",
+      "from": "<script src=\"./javascript/default_user.js\"></script>"
+     }
+    ]
+   },
+   "note": "No browser is used. Probe S1 sends the same requests the page sends: one page load, more loads at the page's refresh interval for 35 seconds, then one sign-up."
+  },
+  {
+   "id": "W-007",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 94,
+   "title": "One user's password is reset by hand in user-mongodb",
+   "changes": [
+    {
+     "recipe": "edit_password"
+    }
+   ],
+   "restart": [],
+   "settle_seconds": 0,
+   "extra_probes": [
+    "V1"
+   ],
+   "probes_changed": [
+    "V1",
+    "V2"
+   ],
+   "symptom": "Run of 2026-11-21. The command changed one document (modified=1). Probes changed: V1 and V2. Login with the password that user-mongodb now holds (pw_reset_new) is refused with 500 'User login failure: Incorrect username or password'. Login with the old password (pw_reset_old), which is no longer in user-mongodb, is accepted with 302 and a cookie. All other probes pass. The revert wrote the old salt and hash back (restored=1); clean again.",
+   "ticket": "The user reset_target contacted support after a password reset. The new password is refused with 'Incorrect username or password'. The old password still opens the account. No other user reported a problem.",
+   "decision": {
+    "title": "Who may change credentials",
+    "owner": "Security",
+    "A": "Support may reset a user's password directly in user-mongodb. user-mongodb is the source of truth for credentials.",
+    "B": "Credentials are changed through the application only, never directly in the database."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "store": "user-mongodb",
+      "keywords": [
+       "reset_target",
+       "password",
+       "salt",
+       "credential"
+      ]
+     }
+    ],
+    "other_end": [
+     {
+      "file": "src/UserService/UserHandler.h",
+      "from": "void UserHandler::Login(std::string &_return, int64_t req_id,",
+      "to": "int64_t UserHandler::GetUserId(",
+      "to_is_next_function": true
+     }
+    ]
+   },
+   "note": "No source file changes. The account reset_target is created by the probe and logs in once before the change, so its credentials are in user-memcached. The change writes salt and hash for the password pw_reset_new; the old values are kept in a side collection (w007_backup) and written back on revert."
+  },
+  {
+   "id": "W-008",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 88,
+   "title": "The two timeline Redis stores come back empty",
+   "changes": [
+    {
+     "recipe": "empty_timeline_redis"
+    }
+   ],
+   "restart": [],
+   "settle_seconds": 0,
+   "extra_probes": [
+    "T1"
+   ],
+   "probes_changed": [
+    "T1"
+   ],
+   "symptom": "Run of 2026-11-21. 92 keys were hidden in home-timeline-redis and 67 in user-timeline-redis. Only T1 changed: the home feed of veteran_a shows 0 of its 3 older posts; the gateway answers 200 with an empty result and no error. T2 passes: the profile of veteran_b still shows its 3 posts, refilled from MongoDB. New posts and their fan-out work (P3 to P7 pass). The revert renamed the keys back (92 and 67); clean again.",
+   "ticket": "Users report that their home feed is empty: the older posts are gone. Their own profile page still shows their posts. New posts from people they follow do appear in the feed.",
+   "decision": {
+    "title": "Role of the timeline Redis stores",
+    "owner": "DBA",
+    "A": "Every Redis store in this system is a cache and may be emptied at any time.",
+    "B": "home-timeline-redis holds the only copy of the home feeds. It must be moved together with its data."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "store": "home-timeline-redis",
+      "keywords": []
+     },
+     {
+      "store": "user-timeline-redis",
+      "keywords": []
+     }
+    ],
+    "other_end": [
+     {
+      "file": "src/HomeTimelineService/HomeTimelineHandler.h",
+      "from": "void HomeTimelineHandler::ReadHomeTimeline(",
+      "to_end": true,
+      "to_is_next_function": true
+     }
+    ]
+   },
+   "note": "In both cases user-timeline-redis is not a fault: it refills from MongoDB. An answer that blames it is wrong. How the empty store is produced here: every key is renamed with the prefix 'w008:', so the services find nothing, and the revert renames the keys back. This stands in for a Redis that was replaced and started empty; no Redis container is restarted. Feed entries written while the change is live are overwritten by the restore."
+  },
+  {
+   "id": "W-009",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 62,
+   "title": "Old posts are deleted from post storage, and the gateway shows an empty feed instead of an error",
+   "changes": [
+    {
+     "file": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua",
+     "line": 84,
+     "original": "    ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR",
+     "injected": "    ngx.status = ngx.HTTP_OK"
+    },
+    {
+     "file": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua",
+     "line": 86,
+     "original": "      ngx.say(\"Get home-timeline failure: \" .. ret.message)",
+     "injected": "      ngx.say(\"[]\")"
+    },
+    {
+     "file": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua",
+     "line": 89,
+     "original": "      ngx.say(\"Get home-timeline failure: \" .. ret)",
+     "injected": "      ngx.say(\"[]\")"
+    },
+    {
+     "file": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua",
+     "line": 94,
+     "original": "    ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)",
+     "injected": "    ngx.exit(ngx.HTTP_OK)"
+    },
+    {
+     "recipe": "delete_old_posts"
+    }
+   ],
+   "restart": [
+    "post-storage-memcached",
+    "nginx-thrift"
+   ],
+   "settle_seconds": 10,
+   "extra_probes": [
+    "T1"
+   ],
+   "probes_changed": [
+    "T1",
+    "T2"
+   ],
+   "symptom": "Run of 2026-11-21. 266 posts were removed from post-storage-mongodb (266 saved aside). Probes changed: T1 and T2. The home feed of veteran_a answers 200 with an empty list '[]' (the changed handler hides the failure). The profile of veteran_b answers 500 'Get user-timeline failure: Return set incomplete' (its handler was not changed). New posts and their timelines work (P3 to P7, A1 to A3 pass). The revert restored the 266 posts; clean again.",
+   "ticket": "Feeds and profile pages that hold older posts are broken. Home feeds come back empty with no error. Profile pages fail with 'Return set incomplete'. New posts appear normally.",
+   "decision": {
+    "title": "Retention of posts",
+    "owner": "DBA",
+    "A": "Posts older than the cut-off date are deleted. A feed that cannot be loaded is shown as empty, not as an error page.",
+    "B": "Posts are kept for ever."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "store": "post-storage-mongodb",
+      "keywords": []
+     },
+     {
+      "file": "nginx-web-server/lua-scripts/wrk2-api/home-timeline/read.lua",
+      "changed": true
+     }
+    ],
+    "other_end": [
+     {
+      "store": "home-timeline-redis",
+      "keywords": []
+     },
+     {
+      "store": "user-timeline-redis",
+      "keywords": []
+     }
+    ]
+   },
+   "note": "In case B a second finding is also defensible: the Lua change that hides errors. Accept it as a second finding, not as the root cause. How the world is made: every post that exists at that moment is copied to a side collection (w009_removed) and deleted; the revert inserts them back. post-storage-memcached is restarted as part of the world, because cached copies of the deleted posts would otherwise keep the pages working for a while."
+  },
+  {
+   "id": "W-010C",
+   "kind": "control",
+   "status": "measured",
+   "idea": null,
+   "title": "Control: two services are recreated, nothing else changes",
+   "changes": [],
+   "restart": [],
+   "settle_seconds": 0,
+   "extra_probes": [
+    "T1"
+   ],
+   "trigger": {
+    "what": "A deployment recreates two services. The one with the higher address is started first, so the two trade addresses.",
+    "swap": [
+     "home-timeline-service",
+     "user-timeline-service"
+    ],
+    "watch": [
+     "home-timeline-service",
+     "user-timeline-service"
+    ],
+    "wait_seconds": 20
+   },
+   "probes_changed": [],
+   "symptom": "Run of 2026-11-21 02:00. The two services traded addresses (172.20.0.17 and 172.20.0.19). No probe changed. So with the original 10-second setting the deployment event alone is harmless.",
+   "ticket": "Could you check that my home feed is working correctly after the update today, at around {at} UTC? I haven't noticed any problems so far, but I'd like to make sure everything is working as expected."
+  },
+  {
+   "id": "W-010",
+   "kind": "fault",
+   "status": "measured",
+   "idea": 3,
+   "title": "The gateway keeps service addresses for 5 minutes, and a deployment recreates two services",
+   "changes": [
+    {
+     "file": "nginx-web-server/conf/nginx.conf",
+     "line": 44,
+     "original": "  resolver 127.0.0.11 valid=10s ipv6=off;",
+     "injected": "  resolver 127.0.0.11 valid=300s ipv6=off;"
+    }
+   ],
+   "restart": [
+    "nginx-thrift"
+   ],
+   "settle_seconds": 10,
+   "extra_probes": [
+    "T1"
+   ],
+   "trigger": {
+    "what": "A deployment recreates two services. The one with the higher address is started first, so the two trade addresses.",
+    "swap": [
+     "home-timeline-service",
+     "user-timeline-service"
+    ],
+    "watch": [
+     "home-timeline-service",
+     "user-timeline-service"
+    ],
+    "wait_seconds": 20
+   },
+   "probes_changed": [
+    "B1",
+    "P7"
+   ],
+   "symptom": "Run of 2026-11-21 02:05. The two services traded addresses (home-timeline-service 172.20.0.19 -> .17, user-timeline-service .17 -> .19). Probes changed: P7 and B1. Both are home-feed reads through the gateway and both return 500 'Get home-timeline failure: Invalid method name: ReadHomeTimeline': the request reached the container that now holds the old address, which is user-timeline-service. The gateway log shows more than the two probes: three home-feed reads failed this way (two on wrk2-api, one on api), one user-timeline read failed the opposite way ('Invalid method name: ReadUserTimeline'), and two posts failed with 'compost_post failure: No more data to read.' in the same second as the first read failures. The failure is partial: other home-feed reads in the same run passed (A1, T1), and so did the other user-timeline reads. The control W-010C, with the same event and the original 10-second setting, showed no change. Clean again after revert. Not explained yet: why only some requests fail (a possible reason is that each gateway worker keeps its own address cache; not checked), and whether the two failed posts come from the traded addresses or from the recreate itself (not checked).",
+   "ticket": "After a deployment, some home-feed requests fail with HTTP 500 while others succeed in the same minute. Right after the deployment a few posts and one profile request failed as well. Most requests work.",
+   "decision": {
+    "title": "How fast the gateway follows address changes",
+    "owner": "Ops",
+    "A": "The gateway keeps service addresses for 5 minutes, so that a short DNS outage does not break it.",
+    "B": "The gateway follows a new container address within 10 seconds."
+   },
+   "root_cause": {
+    "places": [
+     {
+      "file": "nginx-web-server/conf/nginx.conf",
+      "changed": true
+     }
+    ],
+    "other_end": []
+   },
+   "note": "This world needs an event after the change: two services are removed and started again in the other order. The control world W-010C runs the same event with the original 10-second setting. The symptom is temporary by nature: it ends when the cached addresses expire or the gateway restarts."
+  }
+ ]
+}

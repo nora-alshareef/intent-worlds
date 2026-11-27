@@ -1,6 +1,0 @@
-[2026-Nov-21 06:17:39.413515] <warning>: (UserHandler.h:311:RegisterUser) User mark already existed.
-[2026-Nov-21 06:17:39.444077] <warning>: (UserHandler.h:311:RegisterUser) User elon already existed.
-[2026-Nov-21 06:17:39.459384] <warning>: (UserHandler.h:311:RegisterUser) User bill already existed.
-[2026-Nov-21 06:17:49.489877] <warning>: (UserHandler.h:311:RegisterUser) User mark already existed.
-[2026-Nov-21 06:17:59.523956] <warning>: (UserHandler.h:311:RegisterUser) User mark already existed.
-[2026-Nov-21 06:18:09.564780] <warning>: (UserHandler.h:311:RegisterUser) User mark already existed.

@@ -1,3 +1,0 @@
-[2026-Nov-22 07:38:13.439767] <info>: (UserHandler.h:932:GetMachineId) MAC address = 76:1f:96:7e:43:ac
-[2026-Nov-22 07:38:13.446887] <info>: (UserService.cpp:63:main) machine_id = e80
-[2026-Nov-22 07:38:13.462109] <info>: (UserService.cpp:94:main) Starting the user-service server ...

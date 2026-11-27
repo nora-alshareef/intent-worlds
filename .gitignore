@@ -1,8 +1,15 @@
+# your own key and model; copy .env.example to .env
+.env
+# the DeathStarBench clone and the Python environment used to seed it
 base/
 venv/
-scenarios-v1/
-agent/runs/
-state/
-_scratch/
+# everything world.py and run.py write
+.work/
+results/
 __pycache__/
 .DS_Store
+# left over from the main branch when both branches share one folder
+agent/
+state/
+_scratch/
+scenarios-v1/

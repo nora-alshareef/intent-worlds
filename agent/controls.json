@@ -1,9 +1,0 @@
-{
- "_status": "Approved by Norah on 2026-11-22. Wording by Norah: the user is the one who reports, and the ticket gives a time. The times are filled in when the control runs ({from}, {to}, {at} are UTC clock times of that run).",
- "W-000": {
-  "ticket": "Logging in took longer than usual today, sometime between {from} and {to} UTC. It only happened once, and I haven't been able to reproduce it since. Could you check what might have caused it?"
- },
- "W-010C": {
-  "ticket": "Could you check that my home feed is working correctly after the update today, at around {at} UTC? I haven't noticed any problems so far, but I'd like to make sure everything is working as expected."
- }
-}

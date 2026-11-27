@@ -1,0 +1,95 @@
+{
+ "about": "Team decisions that are the same in every scenario. Each measured fault world adds one more entry (worlds.json, 'decision'). 'neutral' stands in the place of a world's own entry in case N.",
+ "common": [
+  {
+   "title": "Tracing",
+   "owner": "Observability",
+   "text": "In this environment every request is traced (sampling 1.0)."
+  },
+  {
+   "title": "Ports",
+   "owner": "Ops",
+   "text": "The gateway serves the web pages and the API on port 8080. Media is served on port 8081."
+  },
+  {
+   "title": "Benchmark routes",
+   "owner": "Platform",
+   "text": "The wrk2-api routes exist for benchmarks only and need no login."
+  },
+  {
+   "title": "Encryption between services",
+   "owner": "Security",
+   "text": "Calls between services are not encrypted in this environment."
+  },
+  {
+   "title": "Connection pools",
+   "owner": "Platform",
+   "text": "Each service may keep up to 512 connections to each service or store it calls."
+  },
+  {
+   "title": "Call timeout",
+   "owner": "Platform",
+   "text": "A call between services may take up to 10 seconds."
+  },
+  {
+   "title": "Posts are immutable",
+   "owner": "Product",
+   "text": "A post never changes after it is written."
+  },
+  {
+   "title": "Usernames",
+   "owner": "Product",
+   "text": "A username may contain letters, digits, hyphen and underscore."
+  },
+  {
+   "title": "Post order",
+   "owner": "Platform",
+   "text": "A post id is unique but is not a time order. Feeds are ordered by timestamp."
+  },
+  {
+   "title": "MongoDB version",
+   "owner": "DBA",
+   "text": "MongoDB stays on version 4.4.6."
+  },
+  {
+   "title": "Memcached",
+   "owner": "DBA",
+   "text": "The memcached instances are caches. They may be restarted at any time."
+  },
+  {
+   "title": "Log level",
+   "owner": "Observability",
+   "text": "Services log at info level."
+  },
+  {
+   "title": "Restart policy",
+   "owner": "Ops",
+   "text": "Containers restart automatically when they stop."
+  },
+  {
+   "title": "Test data",
+   "owner": "QA",
+   "text": "The seeded data set is socfb-Reed98: 962 users."
+  },
+  {
+   "title": "Upload size",
+   "owner": "Product",
+   "text": "The media front end accepts uploads up to 100 MB."
+  },
+  {
+   "title": "Queue worker",
+   "owner": "Platform",
+   "text": "write-home-timeline-service and RabbitMQ are not deployed."
+  },
+  {
+   "title": "Password storage",
+   "owner": "Security",
+   "text": "A password is stored as the SHA-256 hash of the password plus a per-user salt."
+  }
+ ],
+ "neutral": {
+  "title": "Tracing UI",
+  "owner": "Observability",
+  "text": "The Jaeger UI is served on port 16686."
+ }
+}

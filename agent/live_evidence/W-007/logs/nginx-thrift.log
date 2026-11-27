@@ -1,3 +1,0 @@
-2026/11/22 06:41:59 [error] 15#15: *169 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"
-2026/11/22 06:42:05 [error] 21#21: *205 [lua] login.lua:51: Login(): User login failure: Incorrect username or password, client: 172.20.0.1, server: localhost, request: "POST /api/user/login HTTP/1.1", host: "127.0.0.1:8080"
-2026/11/22 06:42:07 [error] 19#19: *217 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"

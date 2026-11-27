@@ -1,2 +1,0 @@
-[2026-Nov-22 07:38:28.450587] <error>: (ComposePostHandler.h:137:_ComposeCreaterHelper) Failed to send compose-creator to user-service
-[2026-Nov-22 07:38:28.474790] <error>: (ComposePostHandler.h:353:_UploadHomeTimelineHelper) Failed to write home timeline to home-timeline-service

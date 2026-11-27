@@ -1,4 +1,0 @@
-2026/11/22 07:42:28 [error] 23#23: *387 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"
-2026/11/22 07:42:50 [error] 13#13: *394 [lua] compose.lua:62: ComposePost(): compost_post failure: No more data to read., client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/post/compose HTTP/1.1", host: "127.0.0.1:8080"
-2026/11/22 07:42:50 [error] 28#28: *396 [lua] compose.lua:62: ComposePost(): compost_post failure: No more data to read., client: 172.20.0.1, server: localhost, request: "POST /wrk2-api/post/compose HTTP/1.1", host: "127.0.0.1:8080"
-2026/11/22 07:42:59 [error] 24#24: *485 [lua] get_follower.lua:75: GetFollower(): Get user-timeline failure: ZADD: no key specified, client: 172.20.0.1, server: localhost, request: "GET /api/user/get_follower HTTP/1.1", host: "127.0.0.1:8080"

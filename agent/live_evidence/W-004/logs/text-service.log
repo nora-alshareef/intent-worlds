@@ -1,6 +1,0 @@
-[2026-Nov-22 05:49:31.026021] <error>: (TextHandler.h:93:operator()) Failed to upload urls to url-shorten-service
-[2026-Nov-22 05:49:31.026648] <error>: (TextHandler.h:138:ComposeText) Failed to get shortened urls from url-shorten-service
-[2026-Nov-22 05:49:34.286494] <error>: (TextHandler.h:93:operator()) Failed to upload urls to url-shorten-service
-[2026-Nov-22 05:49:34.286971] <error>: (TextHandler.h:138:ComposeText) Failed to get shortened urls from url-shorten-service
-[2026-Nov-22 05:49:34.296949] <error>: (TextHandler.h:93:operator()) Failed to upload urls to url-shorten-service
-[2026-Nov-22 05:49:34.297380] <error>: (TextHandler.h:138:ComposeText) Failed to get shortened urls from url-shorten-service
