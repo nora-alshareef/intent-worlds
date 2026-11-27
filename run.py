@@ -119,7 +119,7 @@ def run_world(world, worlds, opts, done, setup):
         times = (began, time.time())
         for run_no, case in todo:
             if run_scenario(world, case, run_no, worlds, opts, times, setup)["stopped"] == "api_error":
-                print("    the model could not be reached; stopping")
+                print("    the model call failed (see the error line above); stopping")
                 code = 3
                 break
     finally:

@@ -33,7 +33,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 INPUT_VERSION = 3              # 1: first baseline (fix proposed, four verdicts). 3: this format. 2 was planned and never run.
 ENV_FILE = os.path.join(HERE, ".env")
 DEFAULT_MODEL = "haiku"
-PASSED_ON = ("ANTHROPIC_", "CLAUDE_CODE_")          # lines of .env with these prefixes go to the `claude` program
+PASSED_ON = ("ANTHROPIC_", "CLAUDE_")          # lines of .env with these prefixes go to the `claude` program
 MAX_TURNS = 50
 MAX_FOLLOW_UPS = 4
 TIMEOUT_S = 1800
@@ -41,7 +41,7 @@ TOOLS = "Read,Grep,Glob,Write,Bash"                 # the only built-in tools th
 ALLOWED = ["Read", "Grep", "Glob", "Write", "Bash(python3 store.py:*)"]
 DENIED = ["WebFetch", "WebSearch", "Task", "Edit", "NotebookEdit"]
 PATH_TOOLS = ("Read", "Write", "Edit", "Grep", "Glob", "NotebookEdit")
-READ_ONLY = r"(find|ls|cat|head|tail|wc|grep|rg|sort|uniq|cut|file|stat|tree|pwd|echo|true)"
+READ_ONLY = r"(find|ls|cat|head|tail|wc|grep|rg|sort|uniq|cut|file|stat|tree|pwd|echo|true|jq|date|sed -n)"
 
 PROMPT = """# Incident diagnosis
 
