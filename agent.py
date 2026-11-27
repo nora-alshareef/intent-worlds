@@ -211,11 +211,13 @@ def audit(events, folder):
                     outside.append("Glob %s" % pat)
             elif name == "Bash":
                 cmd = str(arg.get("command") or "")
-                if re.match(r"^python3 store\.py '[^']*'\s*$", cmd):
-                    continue
+                if all(re.match(r"^\s*python3 store\.py '[^']*'\s*$", part) for part in re.split(r"&&|;", cmd)):
+                    continue                              # the store command, once or several times in a row
                 bare = re.sub(r"\"[^\"]*\"|'[^']*'", " ", cmd)            # name patterns in quotes are not paths
                 paths = re.findall(r"(?<![\w.-])(/[^\s|;&>]*|~[^\s|;&>]*|\.\.[^\s|;&>]*)", bare)
-                stays = all(p == "/dev/null" or inside(os.path.expanduser(p)) for p in paths)
+                own = os.path.join(os.path.expanduser("~"), ".claude", "projects")    # where the program keeps this run's long tool outputs
+                stays = all(p == "/dev/null" or inside(os.path.expanduser(p)) or
+                            (os.path.expanduser(p).startswith(own) and "/tool-results/" in p) for p in paths)
                 reads = all(re.match(r"^\s*(%s|xargs)\b" % READ_ONLY[1:-1], part) for part in re.split(r"\|\||&&|[|;]", bare)) \
                     and ">" not in bare.replace("2>/dev/null", "") and "$(" not in cmd and "`" not in cmd
                 if not (stays and reads):
