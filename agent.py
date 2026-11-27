@@ -14,7 +14,8 @@ What stays ours around the loop:
   the check    answer.json is checked against the format; if it does not pass, the agent is told
                why and may write it again, at most MAX_FOLLOW_UPS times
   the audit    every tool call is listed; a path outside the incident folder, or any other
-               command, is reported. The audit DETECTS a step outside the folder; it does not
+               command that ran, is reported. Claude Code itself lets plain read commands
+               (ls, grep, cat) run inside the folder and refuses the rest; refused calls are counted. The audit DETECTS a step outside the folder; it does not
                prevent one. run.py therefore builds the folder outside the project.
 A key that is set in the shell and not in .env is never passed on, so that a run cannot be
 billed to a key nobody chose. With no key in .env, the Claude login of this machine is used.
@@ -32,7 +33,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 INPUT_VERSION = 3              # 1: first baseline (fix proposed, four verdicts). 3: this format. 2 was planned and never run.
 ENV_FILE = os.path.join(HERE, ".env")
 DEFAULT_MODEL = "haiku"
-CREDENTIALS = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL")
+PASSED_ON = ("ANTHROPIC_", "CLAUDE_CODE_")          # lines of .env with these prefixes go to the `claude` program
 MAX_TURNS = 50
 MAX_FOLLOW_UPS = 4
 TIMEOUT_S = 1800
@@ -40,7 +41,7 @@ TOOLS = "Read,Grep,Glob,Write,Bash"                 # the only built-in tools th
 ALLOWED = ["Read", "Grep", "Glob", "Write", "Bash(python3 store.py:*)"]
 DENIED = ["WebFetch", "WebSearch", "Task", "Edit", "NotebookEdit"]
 PATH_TOOLS = ("Read", "Write", "Edit", "Grep", "Glob", "NotebookEdit")
-READ_ONLY = r"(find|ls|cat|head|tail|wc|grep|rg|sort|uniq|cut|file|stat|tree|pwd|echo)"
+READ_ONLY = r"(find|ls|cat|head|tail|wc|grep|rg|sort|uniq|cut|file|stat|tree|pwd|echo|true)"
 
 PROMPT = """# Incident diagnosis
 
@@ -170,7 +171,7 @@ def settings():
                 name, eq, value = line.strip().partition("=")
                 if eq and not name.startswith("#"):
                     values[name.strip()] = value.strip().strip("'\"")
-    env = {k: values[k] for k in CREDENTIALS if values.get(k)}
+    env = {k: v for k, v in values.items() if k.startswith(PASSED_ON) and v}
     has_key = "ANTHROPIC_API_KEY" in env or "ANTHROPIC_AUTH_TOKEN" in env
     return {"model": values.get("INTENT_MODEL") or DEFAULT_MODEL, "auth": "api_key" if has_key else "subscription", "env": env}
 
@@ -230,8 +231,10 @@ def call_claude(folder, text, model, max_turns, session=None, binary="claude", s
     if session:
         cmd += ["--resume", session]
     cmd += ["--tools", TOOLS, "--allowedTools"] + ALLOWED + ["--disallowedTools"] + DENIED
-    env = {k: v for k, v in os.environ.items() if k not in CREDENTIALS}
+    env = {k: v for k, v in os.environ.items() if not k.startswith(PASSED_ON)}
     env.update(settings()["env"])                     # only what .env names, never a key from the shell
+    if "ANTHROPIC_AUTH_TOKEN" in env:                 # a gateway such as OpenRouter needs the key variable present and empty
+        env.setdefault("ANTHROPIC_API_KEY", "")
     env["INTENT_AGENT_DIR"] = HERE
     if store_log:
         env["INTENT_STORE_LOG"] = store_log
@@ -301,7 +304,9 @@ def run(folder, model=None, max_turns=MAX_TURNS, log=None, store_log=None, binar
         out["output_tokens"] += usage.get("output_tokens") or 0
         if result.get("total_cost_usd") is not None:  # what the tokens would cost on the API; the subscription is not billed per run
             out["notional_cost_usd"] = round((out["notional_cost_usd"] or 0) + float(result["total_cost_usd"]), 6)
-        out["denials"] += len(result.get("permission_denials") or [])
+        denied = [str((d.get("tool_input") or {}).get("command") or "")[:200] for d in result.get("permission_denials") or []]
+        out["denials"] += len(denied)
+        out["other_commands"] = [c for c in out["other_commands"] if c not in denied]   # asked for and refused: it did not run
         if result.get("is_error") and result.get("subtype") != "error_max_turns":
             out["error"], out["stopped"] = str(result.get("result"))[:500], "api_error"
             break
