@@ -15,7 +15,9 @@
    "extra_probes": [],
    "probes_changed": [],
    "symptom": "Run of 2026-11-20 with the warm-up step: no probe changed, clean after revert.",
-   "ticket": "Logging in took longer than usual today, sometime between {from} and {to} UTC. It only happened once, and I haven't been able to reproduce it since. Could you check what might have caused it?"
+   "ticket": "Logging in took longer than usual today, sometime between {from} and {to} UTC. It only happened once, and I haven't been able to reproduce it since. Could you check what might have caused it?",
+   "measured_at": "2026-11-27T00:35:48Z",
+   "clean_after_revert": true
   },
   {
    "id": "W-001",

@@ -422,6 +422,12 @@ def cookie_lifetime(raw):
     return int(when - time.time())
 
 
+def system_answers():
+    """True when the gateway answers at all, by IP address or by name."""
+    q = "/wrk2-api/user-timeline/read?user_id=1&start=0&stop=1"
+    return http("GET", q, timeout=5)[0] != 0 or http("GET", q, timeout=5, host_header="localhost:8080")[0] != 0
+
+
 def failing(results):
     """Probes that fail or cannot be judged. The known upstream defect is not counted."""
     return sorted(r["probe"] for r in results if r["status"] in ("fail", "error"))
@@ -803,6 +809,8 @@ def apply(world):
     if recipes and os.path.isdir(keep) and os.listdir(keep):
         die("%s is not empty: the backup of an earlier apply is still there. Revert that first, or move it away." % keep)
     extras = world.get("extra_probes", [])
+    if not NO_DOCKER and not system_answers():
+        die("the system does not answer on port %d. Start Docker, run `docker compose up -d` in %s, and try again. Nothing was changed." % (GATEWAY[1], BASE))
 
     print("[1/4] baseline probes (they also create the accounts this world needs)")
     before = failing(run_probes(extras))
